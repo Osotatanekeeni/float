@@ -194,13 +194,18 @@ Where DESIGN.md and the PRD or the rules above differ, these decisions apply:
 
 ## Commands
 
-Not scaffolded yet. Planned: pnpm, Next.js, Vitest, Playwright. Fill this in once the repo exists
-(install, dev, build, test, e2e, db:migrate, db:seed).
+pnpm. The repo is scaffolded (Next.js App Router, `src/` layout, `@/*` alias).
 
-This folder already holds the PRD, DESIGN.md, CLAUDE.md, AGENTS.md, `.env`, `.env.example` and
-`.gitignore`, so `create-next-app` will refuse to scaffold here. Scaffold into a temporary folder,
-move the generated files in, merge `.gitignore` (keep the `.env` rules), and never overwrite `.env`
-or the docs. Then `git init`, create `main` and `develop`, and start the first feature branch.
+| Task | Command |
+|---|---|
+| Install | `pnpm install` |
+| Dev server | `pnpm dev` |
+| Build | `pnpm build` |
+| Unit tests | `pnpm test` (Vitest) |
+| Type-check | `pnpm typecheck` (runs `next typegen` first, then `tsc --noEmit`) |
+| Lint | `pnpm lint` |
+
+Still to add as their branches land: Playwright (e2e), `db:migrate`, `db:seed`.
 
 ## To decide together (fill these in)
 
