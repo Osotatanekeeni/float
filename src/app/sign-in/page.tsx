@@ -21,7 +21,7 @@ export default function SignInPage() {
       <p className="text-[length:var(--text-hero)] font-bold text-brand">float</p>
       <Card>
         <CardHeader>
-          <CardTitle>Sign in</CardTitle>
+          <CardTitle as="h1">Sign in</CardTitle>
           <CardDescription>
             Enter your email and we will send you a link. There is no password to remember.
           </CardDescription>

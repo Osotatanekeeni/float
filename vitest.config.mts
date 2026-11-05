@@ -21,6 +21,7 @@ export default defineConfig({
           include: ["src/**/*.test.{ts,tsx}", "packages/*/src/**/*.test.ts"],
           exclude: ["**/*.int.test.ts", "**/node_modules/**"],
           setupFiles: ["./vitest.setup.ts"],
+          testTimeout: 20_000, // axe-core in jsdom is CPU heavy
         },
       },
       {

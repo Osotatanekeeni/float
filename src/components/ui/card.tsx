@@ -14,8 +14,9 @@ export function CardHeader({ className, ...props }: ComponentProps<"div">) {
   return <div className={cn("mb-3 flex flex-col gap-1", className)} {...props} />;
 }
 
-export function CardTitle({ className, ...props }: ComponentProps<"h2">) {
-  return <h2 className={cn("text-lg font-semibold text-ink md:text-xl", className)} {...props} />;
+// Pages that are only a card (sign-in, check-email) pass as="h1"; elsewhere it stays a section heading.
+export function CardTitle({ className, as: Tag = "h2", ...props }: ComponentProps<"h2"> & { as?: "h1" | "h2" | "h3" }) {
+  return <Tag className={cn("text-lg font-semibold text-ink md:text-xl", className)} {...props} />;
 }
 
 export function CardDescription({ className, ...props }: ComponentProps<"p">) {

@@ -36,11 +36,11 @@ async function Signed() {
 // Placeholder: the Safe-to-Spend home arrives with the core screens (M2).
 export default function HomePage() {
   return (
-    <main className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center gap-4 px-4 py-12">
+    <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
       <h1 className="text-2xl font-bold text-brand">Home</h1>
       <Suspense fallback={<p className="text-ink-muted">Loading</p>}>
         <Signed />
       </Suspense>
-    </main>
+    </div>
   );
 }

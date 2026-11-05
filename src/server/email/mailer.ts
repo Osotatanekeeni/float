@@ -25,3 +25,9 @@ export function getMailer(env: { NODE_ENV?: string }): Mailer {
   }
   return createConsoleMailer();
 }
+
+/** Picks the transport when a link is sent, not when the auth config is built, so sessions keep working
+ * even where no transport is configured; only requesting a sign-in link fails. */
+export function createLazyMailer(env: { NODE_ENV?: string }): Mailer {
+  return { sendMagicLink: async (link) => getMailer(env).sendMagicLink(link) };
+}

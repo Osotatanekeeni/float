@@ -1,7 +1,7 @@
 export const SESSION_COOKIE_NAMES = ["authjs.session-token", "__Secure-authjs.session-token"] as const;
 
-const PUBLIC_EXACT = new Set(["/", "/sign-in", "/design-system", "/offline"]);
-const PUBLIC_PREFIXES = ["/sign-in/", "/api/auth/"];
+const PUBLIC_EXACT = new Set(["/", "/sign-in", "/design-system", "/~offline", "/manifest.webmanifest"]);
+const PUBLIC_PREFIXES = ["/sign-in/", "/api/auth/", "/serwist/"];
 
 export type AccessDecision = "allow" | "redirect" | "unauthorized";
 
