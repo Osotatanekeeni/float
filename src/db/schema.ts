@@ -7,12 +7,14 @@ import {
   date,
   foreignKey,
   index,
+  integer,
   jsonb,
   numeric,
   pgEnum,
   pgPolicy,
   pgRole,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   unique,
@@ -308,3 +310,58 @@ export const aiOutputs = pgTable(
   },
   (t) => [ownRows("ai_outputs_own_rows", "user_id"), uniqueIndex("ai_outputs_cache_unique").on(t.userId, t.kind, t.inputHash)],
 ).enableRLS();
+
+// Auth.js tables. Column names follow @auth/drizzle-adapter. Auth.js runs before a user context exists,
+// so the adapter uses the owner connection (src/db/admin.ts); the policies below still stop the request
+// role from reading anyone's sessions or linked sign-in accounts.
+export const sessions = pgTable(
+  "sessions",
+  {
+    sessionToken: text("session_token").primaryKey(),
+    userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    expires: timestamp("expires", { withTimezone: true }).notNull(),
+  },
+  (t) => [ownRows("sessions_own_rows", "user_id"), index("sessions_user_idx").on(t.userId)],
+).enableRLS();
+
+// OAuth sign-in links (Google is added later). Named auth_accounts: "accounts" is the money accounts table.
+export const authAccounts = pgTable(
+  "auth_accounts",
+  {
+    userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("provider_account_id").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (t) => [
+    primaryKey({ columns: [t.provider, t.providerAccountId] }),
+    ownRows("auth_accounts_own_rows", "user_id"),
+    index("auth_accounts_user_idx").on(t.userId),
+  ],
+).enableRLS();
+
+// Credential-like tables with no user_id: no policy and no grant for the request role (see the
+// revoke migration), so only the owner connection can touch them.
+export const verificationTokens = pgTable(
+  "verification_tokens",
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
+    expires: timestamp("expires", { withTimezone: true }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.identifier, t.token] })],
+).enableRLS();
+
+// Fixed-window counters shared by every instance. The key is a hash, never the email address.
+export const rateLimits = pgTable("rate_limits", {
+  key: text("key").primaryKey(),
+  windowStart: timestamp("window_start", { withTimezone: true }).notNull(),
+  count: integer("count").notNull(),
+}).enableRLS();

@@ -31,3 +31,13 @@ be broken, repeated here for agents that only read this file:
 5. Scenarios never change real data until the user saves or applies them.
 6. Any number in an AI explanation must appear in the engine payload sent to the model, or the explanation is discarded.
 7. Engine changes keep every property test and worked example in the PRD passing (including the ₦167,000 Safe-to-Spend example).
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

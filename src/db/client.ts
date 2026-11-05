@@ -6,8 +6,14 @@ import * as schema from "./schema";
 export type Db = NodePgDatabase<typeof schema>;
 export type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0];
 
+// pg currently treats sslmode require, prefer and verify-ca as verify-full and warns that this will change.
+// Saying verify-full keeps today's behaviour (certificates are verified) and survives the pg 9 change.
+export function normalizeConnectionString(connectionString: string): string {
+  return connectionString.replace(/sslmode=(require|prefer|verify-ca)(?=&|$)/, "sslmode=verify-full");
+}
+
 export function createDb(connectionString: string, options: { max?: number } = {}) {
-  const pool = new Pool({ connectionString, max: options.max ?? 5 });
+  const pool = new Pool({ connectionString: normalizeConnectionString(connectionString), max: options.max ?? 5 });
   const db = drizzle(pool, { schema });
   return { db, pool, close: () => pool.end() };
 }

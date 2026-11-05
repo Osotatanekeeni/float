@@ -206,6 +206,7 @@ pnpm. The repo is scaffolded (Next.js App Router, `src/` layout, `@/*` alias).
 | Type-check | `pnpm typecheck` (runs `next typegen` first, then `tsc --noEmit`) |
 | Lint | `pnpm lint` |
 | Integration tests | `pnpm test:int` (Neon `test` branch, wiped and re-migrated first; needs `TEST_DATABASE_URL_UNPOOLED`) |
+| Sign-in links in dev | printed in the `next dev` terminal (console email transport); refused in production |
 | Generate a migration | `pnpm db:generate` (Drizzle only; never edit the database by hand) |
 | Apply migrations | `pnpm db:migrate` (uses `DATABASE_URL_UNPOOLED`, the `dev` branch locally) |
 | Design system | `/design-system` page (both themes side by side) |
