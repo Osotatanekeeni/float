@@ -201,7 +201,8 @@ pnpm. The repo is scaffolded (Next.js App Router, `src/` layout, `@/*` alias).
 | Install | `pnpm install` |
 | Dev server | `pnpm dev` |
 | Build | `pnpm build` |
-| Unit tests | `pnpm test` (Vitest) |
+| Unit tests | `pnpm test` (Vitest, app and `packages/engine`) |
+| Engine coverage | `pnpm test:coverage` (fails below 95%) |
 | Type-check | `pnpm typecheck` (runs `next typegen` first, then `tsc --noEmit`) |
 | Lint | `pnpm lint` |
 
