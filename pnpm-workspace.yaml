@@ -1,8 +1,14 @@
 packages:
   - "packages/*"
 
+# Native binaries ship prebuilt through optional dependencies, so no install script needs to run.
 allowBuilds:
-  '@swc/core': set this to true or false
-  esbuild: set this to true or false
+  "@swc/core": false
+  esbuild: false
   sharp: false
   unrs-resolver: false
+
+overrides:
+  # @serwist/turbopack bundles zod 4.6.5, which has a high-severity memory-exhaustion advisory
+  # (patched in 4.6.6). Same major version as the zod this app already uses.
+  "zod@<4.6.6": "4.6.7"
