@@ -1,0 +1,107 @@
+name: CI
+
+# No pull requests in this project (CLAUDE.md): work happens on feature branches, so every push is checked.
+on:
+  push:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint, types, unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      # Unit and property tests; fails below 95% engine coverage.
+      - run: pnpm test:coverage
+      - name: Migrations match the schema
+        # generate writes a new migration only if schema.ts has changes nobody committed a migration for.
+        run: |
+          pnpm exec drizzle-kit generate --name=ci_drift_check
+          test -z "$(git status --porcelain -- drizzle)" || { echo "schema.ts and drizzle/ disagree: run pnpm db:generate and commit the migration"; git status --short -- drizzle; exit 1; }
+      - name: Scan production dependencies
+        run: pnpm audit --prod --audit-level=high
+
+  integration:
+    name: Integration tests (Neon test branch)
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # One Neon test branch: its global setup wipes and re-migrates it, so runs must queue, never overlap.
+    concurrency:
+      group: neon-test-branch
+      cancel-in-progress: false
+    env:
+      TEST_DATABASE_URL_UNPOOLED: ${{ secrets.TEST_DATABASE_URL_UNPOOLED }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Global setup applies every Drizzle migration to the test branch first, then the suites run.
+      - run: pnpm test:int
+
+  e2e:
+    name: End-to-end tests (Playwright)
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: neon-test-branch
+      cancel-in-progress: false
+    env:
+      CI: "true"
+      PW_CHANNEL: "" # use the Playwright-installed Chromium, not a local Chrome
+      TEST_DATABASE_URL_UNPOOLED: ${{ secrets.TEST_DATABASE_URL_UNPOOLED }}
+      AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm e2e
+      - uses: actions/upload-artifact@v4
+        if: ${{ failure() }}
+        with:
+          name: playwright-report
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
+  build:
+    name: Production build
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build

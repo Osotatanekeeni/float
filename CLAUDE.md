@@ -216,6 +216,14 @@ Still to add as their branches land: `db:seed`.
 
 Neon: `main` is production, `dev` is for development, `test` is wiped by the integration tests. Local `.env` points at `dev` and `test`; never put the `main` URL in a local `.env`.
 
+## CI
+
+`.github/workflows/ci.yml` runs on every push (no PRs): quality (lint, type-check, unit and property tests with
+the 95% engine coverage gate, a check that `drizzle/` matches `schema.ts`, `pnpm audit --prod` at high), then
+integration and e2e against the Neon `test` branch (queued, never concurrent), and a production build. It needs
+two repository secrets: `TEST_DATABASE_URL_UNPOOLED` (the Neon `test` branch) and `AUTH_SECRET`. Not in CI yet:
+WebKit and Firefox e2e projects, Lighthouse budgets and a production deploy with migrations (no hosting yet).
+
 ## To decide together (fill these in)
 
 - [x] Display rounding: kobo and other minor units are never shown; money displays in whole units (decided 2026-11-05). Storage and the engine stay in integer minor units. Watch that rounded lines in a breakdown still read as summing to the headline.
