@@ -1,26 +1,178 @@
 @import "tailwindcss";
+@import "@fontsource-variable/dm-sans/index.css";
+@import "@fontsource/dm-mono/400.css";
+@import "@fontsource/dm-mono/500.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Design tokens (DESIGN.md, with the CLAUDE.md contrast fixes).
+ * src/design/tokens.ts is the source of truth; tokens-sync.test.ts keeps these blocks equal to it.
+ * The theme is set on <html data-theme> by an inline script, so light is the no-script default.
+ */
+:root, [data-theme="light"] {
+  --brand-primary: #235e62;
+  --brand-secondary: #477f77;
+  --brand-hover: #194a4e;
+  --brand-soft: #dcebe5;
+  --brand-subtle: #eff5f1;
+  --on-brand: #ffffff;
+  --app-background: #f8f7f1;
+  --surface: #ffffff;
+  --surface-secondary: #f0f2ec;
+  --surface-tertiary: #e8ece5;
+  --text-primary: #292f2d;
+  --text-secondary: #59645f;
+  --text-muted: #5e6862;
+  --border: #e2e6df;
+  --border-strong: #cbd5cc;
+  --accent: #d6aa69;
+  --accent-text: #8a6326;
+  --sage: #75a99a;
+  --focus-ring: #235e62;
+
+  --status-available-bg: #e7f2ec;
+  --status-available-text: #326b51;
+  --status-income-bg: #e9f3ec;
+  --status-income-text: #326b51;
+  --status-planned-bg: #edf1f4;
+  --status-planned-text: #566a78;
+  --status-caution-bg: #fff3df;
+  --status-caution-text: #895c1a;
+  --status-shortfall-bg: #f9eae7;
+  --status-shortfall-text: #a64d43;
+  --status-info-bg: #eaf1f5;
+  --status-info-text: #416a83;
+
+  --card-shadow: 0 1px 2px rgb(41 47 45 / 0.06);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --brand-primary: #9bcfc1;
+  --brand-secondary: #78b5a6;
+  --brand-hover: #b5ded2;
+  --brand-soft: #29413b;
+  --brand-subtle: #1d2d29;
+  --on-brand: #152321;
+  --app-background: #152321;
+  --surface: #1d2d29;
+  --surface-secondary: #253731;
+  --surface-tertiary: #2b4039;
+  --text-primary: #eaf3ef;
+  --text-secondary: #b9ccc5;
+  --text-muted: #9aafa6;
+  --border: #30433c;
+  --border-strong: #435a50;
+  --accent: #d8b77c;
+  --accent-text: #d8b77c;
+  --sage: #78b5a6;
+  --focus-ring: #9bcfc1;
+
+  --status-available-bg: #1f3a30;
+  --status-available-text: #8fd1ae;
+  --status-income-bg: #1e3a2f;
+  --status-income-text: #8fd1ae;
+  --status-planned-bg: #25333d;
+  --status-planned-text: #a9c0cf;
+  --status-caution-bg: #3d3220;
+  --status-caution-text: #e8c583;
+  --status-shortfall-bg: #432824;
+  --status-shortfall-text: #f0a89e;
+  --status-info-bg: #1f3441;
+  --status-info-text: #9cc4de;
+
+  --card-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand: var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-subtle: var(--brand-subtle);
+  --color-on-brand: var(--on-brand);
+  --color-app: var(--app-background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-secondary);
+  --color-surface-3: var(--surface-tertiary);
+  --color-ink: var(--text-primary);
+  --color-ink-2: var(--text-secondary);
+  --color-ink-muted: var(--text-muted);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-text);
+  --color-sage: var(--sage);
+  --color-focus: var(--focus-ring);
+
+  --color-status-available: var(--status-available-bg);
+  --color-status-available-ink: var(--status-available-text);
+  --color-status-income: var(--status-income-bg);
+  --color-status-income-ink: var(--status-income-text);
+  --color-status-planned: var(--status-planned-bg);
+  --color-status-planned-ink: var(--status-planned-text);
+  --color-status-caution: var(--status-caution-bg);
+  --color-status-caution-ink: var(--status-caution-text);
+  --color-status-shortfall: var(--status-shortfall-bg);
+  --color-status-shortfall-ink: var(--status-shortfall-text);
+  --color-status-info: var(--status-info-bg);
+  --color-status-info-ink: var(--status-info-text);
+
+  --font-sans: "DM Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
+
+  /* DESIGN.md radii: inputs 8-10px, cards 14-16px */
+  --radius-input: 0.625rem;
+  --radius-card: 1rem;
+  --shadow-card: var(--card-shadow);
+
+  /* DESIGN.md type scale (mobile first; desktop sizes applied with the md: breakpoint) */
+  --text-hero: 2rem;
+  --text-page: 1.5rem;
+  --text-section: 1.125rem;
+  --text-small-label: 0.75rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    background: var(--app-background);
+  }
+
+  body {
+    background: var(--app-background);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Money figures: DM Sans with tabular numerals, never monospace (DESIGN.md 3) */
+  .money {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  /* Safe-area aware padding for fixed bottom navigation (FLT-PWA-07) */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
