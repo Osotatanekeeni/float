@@ -13,7 +13,7 @@ export default function CheckEmailPage() {
       <Card>
         <CardHeader>
           <MailCheck aria-hidden className="size-6 text-brand" />
-          <CardTitle>Check your email</CardTitle>
+          <CardTitle as="h1">Check your email</CardTitle>
           <CardDescription>
             We sent a sign-in link. It works once and expires in 15 minutes. If nothing arrives, check your spam
             folder or try again.

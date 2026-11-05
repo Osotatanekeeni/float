@@ -58,9 +58,9 @@ describe("Button", () => {
   it("asChild renders the child element instead of a button", () => {
     render(
       <Button asChild>
-        <a href="/forecast">View forecast</a>
+        <a href="#forecast">View forecast</a>
       </Button>,
     );
-    expect(screen.getByRole("link", { name: "View forecast" })).toHaveAttribute("href", "/forecast");
+    expect(screen.getByRole("link", { name: "View forecast" })).toHaveAttribute("href", "#forecast");
   });
 });

@@ -205,13 +205,14 @@ pnpm. The repo is scaffolded (Next.js App Router, `src/` layout, `@/*` alias).
 | Engine coverage | `pnpm test:coverage` (fails below 95%) |
 | Type-check | `pnpm typecheck` (runs `next typegen` first, then `tsc --noEmit`) |
 | Lint | `pnpm lint` |
+| End-to-end tests | `pnpm e2e` (Playwright: builds, serves on 3123 against the `test` branch; locally uses installed Chrome, set `PW_CHANNEL=` for Chromium; reuses a server already on 3123, so kill stale ones with `lsof -ti :3123 \| xargs kill`) |
 | Integration tests | `pnpm test:int` (Neon `test` branch, wiped and re-migrated first; needs `TEST_DATABASE_URL_UNPOOLED`) |
 | Sign-in links in dev | printed in the `next dev` terminal (console email transport); refused in production |
 | Generate a migration | `pnpm db:generate` (Drizzle only; never edit the database by hand) |
 | Apply migrations | `pnpm db:migrate` (uses `DATABASE_URL_UNPOOLED`, the `dev` branch locally) |
 | Design system | `/design-system` page (both themes side by side) |
 
-Still to add as their branches land: Playwright (e2e) and `db:seed`.
+Still to add as their branches land: `db:seed`.
 
 Neon: `main` is production, `dev` is for development, `test` is wiped by the integration tests. Local `.env` points at `dev` and `test`; never put the `main` URL in a local `.env`.
 

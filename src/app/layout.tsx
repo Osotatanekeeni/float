@@ -1,3 +1,4 @@
+import { SerwistProvider } from "@serwist/turbopack/react";
 import type { Metadata, Viewport } from "next";
 import { themeInitScript } from "@/design/theme";
 import "./globals.css";
@@ -5,6 +6,8 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: { default: "Float", template: "%s | Float" },
   description: "Personal cash-flow planning for people with irregular income.",
+  icons: { icon: "/icons/icon-192.png", apple: "/icons/apple-touch-icon.png" },
+  appleWebApp: { capable: true, title: "Float", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {
@@ -24,7 +27,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        {/* No reload when the connection returns: it would throw away a half-entered amount. */}
+        <SerwistProvider swUrl="/serwist/sw.js" disable={process.env.NODE_ENV === "development"} reloadOnOnline={false}>
+          {children}
+        </SerwistProvider>
+      </body>
     </html>
   );
 }

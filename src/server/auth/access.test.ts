@@ -6,7 +6,7 @@ const signedIn = new Set<string>(["authjs.session-token"]);
 
 describe("accessDecision (deny by default; the server still checks every route)", () => {
   it("lets public paths through without a session", () => {
-    for (const path of ["/", "/sign-in", "/sign-in/check-email", "/api/auth/callback/email", "/api/auth/session", "/design-system", "/offline"]) {
+    for (const path of ["/", "/sign-in", "/sign-in/check-email", "/api/auth/callback/email", "/api/auth/session", "/design-system", "/~offline", "/serwist/sw.js", "/manifest.webmanifest"]) {
       expect(accessDecision(path, signedOut), path).toBe("allow");
     }
   });
