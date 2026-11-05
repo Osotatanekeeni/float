@@ -205,6 +205,7 @@ pnpm. The repo is scaffolded (Next.js App Router, `src/` layout, `@/*` alias).
 | Engine coverage | `pnpm test:coverage` (fails below 95%) |
 | Type-check | `pnpm typecheck` (runs `next typegen` first, then `tsc --noEmit`) |
 | Lint | `pnpm lint` |
+| Design system | `/design-system` page (both themes side by side) |
 
 Still to add as their branches land: Playwright (e2e), `db:migrate`, `db:seed`.
 
