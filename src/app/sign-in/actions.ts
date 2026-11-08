@@ -1,9 +1,12 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth, signIn, signOut } from "@/auth";
 import { getAdminDb } from "@/db/admin";
 import { signInSchema } from "@/lib/schemas/auth";
+import { sessionCookieName } from "@/server/auth/config";
+import { assertDevLoginEnabled, createDevSession } from "@/server/auth/dev-login";
 import { requireUserId } from "@/server/auth/guard";
 import { isOverSignInLimit } from "@/server/auth/rate-limit";
 import { signOutEverywhere } from "@/server/auth/sessions";
@@ -35,4 +38,18 @@ export async function signOutEverywhereAction() {
   const userId = await requireUserId(auth);
   await signOutEverywhere(getAdminDb(), userId);
   redirect("/sign-in");
+}
+
+/** Development shortcut (see dev-login.ts). Throws anywhere but local `next dev`. */
+export async function devSignInAction() {
+  assertDevLoginEnabled(process.env);
+  const { token, expires } = await createDevSession(getAdminDb(), new Date());
+  (await cookies()).set(sessionCookieName(false), token, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    secure: false,
+    expires,
+  });
+  redirect("/home");
 }
