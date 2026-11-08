@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { auth } from "@/auth";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SignInForm } from "./sign-in-form";
+import { DevSignIn } from "./dev-sign-in";
 import { SignInNotice } from "./sign-in-notice";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -30,6 +31,7 @@ export default function SignInPage() {
           <SignInNotice />
         </Suspense>
         <SignInForm />
+        <DevSignIn />
       </Card>
       <Suspense>
         <RedirectIfSignedIn />

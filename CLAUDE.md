@@ -207,7 +207,7 @@ pnpm. The repo is scaffolded (Next.js App Router, `src/` layout, `@/*` alias).
 | Lint | `pnpm lint` |
 | End-to-end tests | `pnpm e2e` (Playwright: builds, serves on 3123 against the `test` branch; locally uses installed Chrome, set `PW_CHANNEL=` for Chromium; reuses a server already on 3123, so kill stale ones with `lsof -ti :3123 \| xargs kill`) |
 | Integration tests | `pnpm test:int` (Neon `test` branch, wiped and re-migrated first; needs `TEST_DATABASE_URL_UNPOOLED`) |
-| Sign-in links in dev | printed in the `next dev` terminal (console email transport); refused in production |
+| Sign-in in dev | the sign-in page has a "Continue as dev user" button under `next dev` only (signs in `dev@float.test`); otherwise the magic link is printed in the dev terminal. Both are refused in production |
 | Generate a migration | `pnpm db:generate` (Drizzle only; never edit the database by hand) |
 | Apply migrations | `pnpm db:migrate` (uses `DATABASE_URL_UNPOOLED`, the `dev` branch locally) |
 | Design system | `/design-system` page (both themes side by side) |

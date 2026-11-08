@@ -6,6 +6,9 @@ import type { RateLimitResult } from "./rate-limit";
 export const SESSION_MAX_AGE_SECONDS = 30 * 24 * 60 * 60; // PRD section 8: 30-day idle expiry
 export const MAGIC_LINK_MAX_AGE_SECONDS = 15 * 60;
 
+export const sessionCookieName = (secure: boolean) =>
+  secure ? "__Secure-authjs.session-token" : "authjs.session-token";
+
 export class RateLimitedError extends Error {
   override name = "RateLimitedError";
   constructor(readonly retryAfterSeconds: number) {
@@ -46,7 +49,7 @@ export function buildAuthConfig({ adapter, secure, ...deps }: Deps & { adapter: 
     ],
     cookies: {
       sessionToken: {
-        name: secure ? "__Secure-authjs.session-token" : "authjs.session-token",
+        name: sessionCookieName(secure),
         options: { httpOnly: true, sameSite: "lax", path: "/", secure },
       },
     },
